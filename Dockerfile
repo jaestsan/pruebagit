@@ -1,29 +1,16 @@
-# Set the base image to Ubuntu
-FROM ubuntu
+FROM    centos:centos6
 
-# File Author / Maintainer
-MAINTAINER Javier Esteban Sancho
+# Enable Extra Packages for Enterprise Linux (EPEL) for CentOS
+RUN     yum install -y epel-release
+# Install Node.js and npm
+RUN     yum install -y nodejs npm
 
-# Install Node.js and other dependencies
-RUN apt-get update && \
-    apt-get -y install curl && \
-    curl -sL https://deb.nodesource.com/setup | sudo bash - && \
-    apt-get -y install python build-essential nodejs
+# Install app dependencies
+COPY package.json /src/package.json
+RUN cd /src; npm install --production
 
-# Install nodemon
-RUN npm install -g nodemon
+# Bundle app source
+COPY . /src
 
-# Provides cached layer for node_modules
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /src && cp -a /tmp/node_modules /src/
-
-# Define working directory
-WORKDIR /src
-ADD . /src
-
-# Expose port
 EXPOSE  8080
-
-# Run app using nodemon
-CMD ["nodemon", "/src/server.js"]
+CMD ["node", "/src/server.js"]
