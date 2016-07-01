@@ -34,7 +34,7 @@ routes = require('./routes/sapcs')(app)
 routes = require('./routes/dataplans')(app)
 routes = require('./routes/collections')(app)
 
-mongoose.connect('mongodb://localhost/vSAPC_ui', function(err, res) {
+mongoose.connect('mongodb://' + process.env.MONGODB_PORT_27017_TCP_ADDR + ':' + process.env.MONGODB_PORT_27017_TCP_PORT + 'vSAPC_ui', function(err, res) {
 	if (err) {
 		console.log('ERROR: connection to Database. ' + err);
 	} else {
