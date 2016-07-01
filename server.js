@@ -23,11 +23,13 @@ app.configure(function () {
   app.use(app.router);
   app.use(cors());
 
-});
 
-app.use('port', process.env.PORT || 3000);
-app.use('mongo_tcp_addr', process.env.MONGODB_PORT_27017_TCP_ADDR || localhost);
-app.use('mongo_tcp_port', process.env.MONGODB_PORT_27017_TCP_PORT || 27017);
+  app.set('port', process.env.PORT || 3000);
+  app.set('mongo_tcp_addr', process.env.MONGODB_PORT_27017_TCP_ADDR || 'localhost');
+  app.set('mongo_tcp_port', process.env.MONGODB_PORT_27017_TCP_PORT || 27017);
+
+
+});
 
 app.get('/', function(req, res, next) {
   res.send("Hello world!");
