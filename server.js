@@ -22,8 +22,12 @@ app.configure(function () {
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(cors());
+
 });
 
+app.use('port', process.env.PORT || 3000);
+app.use('mongo_tcp_addr', process.env.MONGODB_PORT_27017_TCP_ADDR || localhost);
+app.use('mongo_tcp_port', process.env.MONGODB_PORT_27017_TCP_PORT || 27017);
 
 app.get('/', function(req, res, next) {
   res.send("Hello world!");
@@ -34,7 +38,7 @@ routes = require('./routes/sapcs')(app)
 routes = require('./routes/dataplans')(app)
 routes = require('./routes/collections')(app)
 
-mongoose.connect('mongodb://' + process.env.MONGODB_PORT_27017_TCP_ADDR + ':' + process.env.MONGODB_PORT_27017_TCP_PORT + 'vSAPC_ui', function(err, res) {
+mongoose.connect('mongodb://' + app.get('mongo_tcp_addr') + ':' + app.get('mongo_tcp_port') + 'vSAPC_ui', function(err, res) {
 	if (err) {
 		console.log('ERROR: connection to Database. ' + err);
 	} else {
@@ -42,6 +46,6 @@ mongoose.connect('mongodb://' + process.env.MONGODB_PORT_27017_TCP_ADDR + ':' + 
 	}
 });
 
-server.listen(3000, function() {
+server.listen(app.get('port'), function() {
   console.log("Node server running on http://localhost:3000");
 });
